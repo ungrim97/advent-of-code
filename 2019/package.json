@@ -1,0 +1,28 @@
+{
+  "name": "advent-of-code-2019",
+  "version": "1.0.0",
+  "description": "Advent of Code 2019 challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ungrim97/advent-of-code.git"
+  },
+  "keywords": [
+    "adventofcode"
+  ],
+  "author": "Mike Eve",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ungrim97/advent-of-code/issues"
+  },
+  "homepage": "https://github.com/ungrim97/advent-of-code#readme",
+  "dependencies": {
+    "bluebird": "^3.7.2"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}
