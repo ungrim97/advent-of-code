@@ -3,7 +3,9 @@ const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const range = require('lodash').range;
 
-const Memory = require('./memory');
+const Memory = require('../src/memory');
+const MemoryAddress = require('../src/memory-address');
+const OperationFactory = require('../src/operation-factory');
 
 fs.readFileAsync('./day2/input', 'utf8')
   .then(inputData => inputData.split(','))
@@ -25,7 +27,7 @@ fs.readFileAsync('./day2/input', 'utf8')
 
 function runVariant(variant) {
   return new Promise((resolve, reject) => {
-    const memory = new Memory(variant.buffer);
+    const memory = new Memory(variant.buffer.map(value => new MemoryAddress(value)), OperationFactory);
 
     memory.addressAtPointer(1).value = variant.noun;
     memory.addressAtPointer(2).value = variant.verb;

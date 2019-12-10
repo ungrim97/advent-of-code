@@ -3,7 +3,7 @@ const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const range = require('lodash').range;
 
-const Password = require('./password');
+const Password = require('../src/password');
 
 fs.readFileAsync('./day4/input', 'utf8')
   .then(inputData => inputData.split('-'))

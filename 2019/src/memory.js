@@ -1,22 +1,12 @@
 'use stict';
-const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs'));
 
-const OperationFactory = require('./operation-factory');
-
-class Address {
-  value;
-  constructor(initialValue) {
-    this.value = Number(initialValue);
-  }
-}
-
-class Memory {
+module.exports = class Memory {
   buffer = [];
   instructionPointer = 0;
 
-  constructor(addressBuffer) {
-    this.buffer = addressBuffer.map(addressValue => new Address(addressValue));
+  constructor(addressBuffer, opFactory) {
+    this.buffer = addressBuffer;
+    this.opFactory = opFactory;
   }
 
   addressAtPointer(pointer) {
@@ -30,11 +20,19 @@ class Memory {
       throw new Error(`No instruction at ${this.instructionPointer}`);
     }
 
-    const operation = OperationFactory.operationForCode(instructionAddress.value);
+    const Operation = this.opFactory.operationForCode(instructionAddress.value);
+    const operation = new Operation();
     if (operation.isTerminator) {
       return this;
     }
 
+    this._processOperation(operation);
+
+    this.instructionPointer += (operation.noOfParams + 1);
+    return this.processBuffer();
+  }
+
+  _processOperation(operation) {
     const opParams = [];
     if (operation.noOfParams > 0) {
       for (let i = 1; i <= operation.noOfParams; i++) {
@@ -47,10 +45,5 @@ class Memory {
     }
 
     operation.perform(opParams);
-
-    this.instructionPointer += (operation.noOfParams + 1);
-    return this.processBuffer();
   }
 }
-
-module.exports = Memory;

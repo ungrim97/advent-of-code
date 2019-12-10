@@ -1,4 +1,5 @@
-class Module {
+'use strict';
+module.exports = class ShipModule {
   constructor(mass) {
     this.mass = mass;
   }
@@ -17,5 +18,3 @@ class Module {
     return fuelNeeded + this._fuelForMass(fuelNeeded);
   }
 }
-
-module.exports = Module;

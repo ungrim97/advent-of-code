@@ -2,9 +2,9 @@
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 
-const Wire = require('./wire');
-const Point = require('./point');
-const Path = require('./Path');
+const Wire = require('../src/wire');
+const Point = require('../src/point');
+const Path = require('../src/path');
 
 fs.readFileAsync('./day3/input', 'utf8')
   .then(inputData => inputData.split('\n'))
