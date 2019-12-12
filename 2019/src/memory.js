@@ -4,9 +4,9 @@ module.exports = class Memory {
   buffer = [];
   instructionPointer = 0;
 
-  constructor(addressBuffer, opFactory) {
+  constructor(addressBuffer, OperationFactory) {
     this.buffer = addressBuffer;
-    this.opFactory = opFactory;
+    this.OperationFactory = OperationFactory;
   }
 
   addressAtPointer(pointer) {
@@ -14,36 +14,50 @@ module.exports = class Memory {
   }
 
   processBuffer() {
-    const instructionAddress = this.addressAtPointer(this.instructionPointer);
+    const instructionValue = this.addressAtPointer(this.instructionPointer).value;
 
-    if (!instructionAddress) {
+    if (typeof instructionValue === 'undefined') {
       throw new Error(`No instruction at ${this.instructionPointer}`);
     }
 
-    const Operation = this.opFactory.operationForCode(instructionAddress.value);
-    const operation = new Operation();
+    const operation = this._generateOperation(instructionValue);
+
     if (operation.isTerminator) {
       return this;
     }
 
-    this._processOperation(operation);
+    let newPointer = this._processOperation(operation);
+    if (newPointer === undefined) {
+      newPointer = this.instructionPointer + operation.noOfParams + 1;
+    }
 
-    this.instructionPointer += (operation.noOfParams + 1);
+    this.instructionPointer = newPointer;
+
     return this.processBuffer();
+  }
+
+  _generateOperation(instruction) {
+    const opCode = String(instruction).slice(-2);
+    const positionModes = String(instruction).slice(0,-2).split('');
+
+    const Operation = this.OperationFactory.operationForCode(opCode);
+    return new Operation(positionModes);
   }
 
   _processOperation(operation) {
     const opParams = [];
     if (operation.noOfParams > 0) {
       for (let i = 1; i <= operation.noOfParams; i++) {
-        const paramPointer = this.addressAtPointer(this.instructionPointer + i);
+        const address = this.addressAtPointer(this.instructionPointer + i);
 
         opParams.push(
-          this.addressAtPointer(paramPointer.value)
-        );
-      }
+          operation.paramPositionIsPointer(i) ?
+            this.addressAtPointer(address.value) :
+            address
+        )
+      };
     }
 
-    operation.perform(opParams);
+    return operation.perform(opParams);
   }
 }
