@@ -1,7 +1,6 @@
 'use strict';
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
-const range = require('lodash').range;
 
 const Memory = require('../src/memory');
 const MemoryAddress = require('../src/memory-address');
