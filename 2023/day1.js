@@ -79,6 +79,7 @@ console.log('Part 1 = %d', input.map((value) => {
 //
 // What is the sum of all of the calibration values?
 const convertNumberWords = (string) => {
+    // Replace 'one' etc with 'o1e' rather than 1 to allow overlapping of words e.g 'twone' == 21 not 2
     return string.replaceAll('one', 'o1e')
         .replaceAll('two', 't2o')
         .replaceAll('three', 't3e')
