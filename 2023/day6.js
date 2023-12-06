@@ -117,20 +117,27 @@ const data = input.reduce((races, line, index) => {
     return races;
 }, [])
 
+/** @param {Number} time */
 const calcMaxSoutions = (time, maxDistance) => {
-    let solutions = 0;
-    // i = 0; i++, t = 7, d = 9; n = t - i; y = t - in;
-    // 1 = 6 === y = time - n * n
-    for (let i = Math.ceil(time/2); i < time; i++) {
-        const distance = (i * (time - i));
-        if (distance <= maxDistance) {
+    // Highest value below the midpoint that passes
+    let maxLowTime = time;
+    // Lowest value below the midpoint that passes
+    let minLowTime = 0;
+
+    while (minLowTime < maxLowTime) {
+        const midTime = Math.floor((minLowTime + maxLowTime) / 2);
+
+        if (midTime * (time - midTime) > maxDistance) {
+            maxLowTime = midTime;
             continue;
-            if (solutions > 0) return solutions;
         }
-        solutions++;
+
+        minLowTime = midTime + 1;
     }
 
-    return solutions + (time %2 === 0 ? solutions - 1 : solutions);
+    // Solutions are the delta between the minimal passing button time and the maximal passing button time (time + 1 - min time)
+    const solutions = (time + 1 - minLowTime) - (minLowTime);
+    return solutions;
 };
 
 console.log('Part 1 = %d', data.reduce((total, [time, maxDistance]) => {
@@ -167,7 +174,7 @@ console.log('Part 1 = %d', data.reduce((total, [time, maxDistance]) => {
 // How many ways can you beat the record in this one much longer race?
 
 console.log('Part 2 = %d', data.reduce(([[raceTime, raceDistance]], [time, maxDistance]) => {
-    return [[`${raceTime}${time}`, `${raceDistance}${maxDistance}`]];
+    return [[Number(`${raceTime}${time}`), Number(`${raceDistance}${maxDistance}`)]];
 }, [[0, 0]]).reduce((total, [time, maxDistance]) => {
     const solutions = calcMaxSoutions(time, maxDistance);
 
