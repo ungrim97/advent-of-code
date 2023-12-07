@@ -126,48 +126,37 @@ const normalizeCardValue = (char, jokerChar) => {
 };
 
 const handValue = (hand, jokerChar) => {
-    const numJokers = hand.split('').filter((card) => card === jokerChar ?? '').length;
-    if (numJokers >= 4) return 6;
+    const handMap = hand.split('').reduce((map, cardValue) => {
+        map[cardValue] ??= 0;
+        map[cardValue] += 1;
 
-    const sortedHand = hand.split('').sort().join('').replaceAll(jokerChar, '');
+        return map;
+    }, {});
+    const jokerCount = handMap[jokerChar] ?? 0;
+    delete handMap[jokerChar];
+
+    if (jokerCount === 5) return 6;
+
+    let [highCount, secondCount] = Object.values(handMap).sort((a,b) => a >= b ? -1 : 1);
+    highCount += jokerCount;
 
     // 5 of a kind
-    if (sortedHand.match(/(\w)\1{4}/)) return 6;
+    if (highCount === 5) return 6;
 
     // 4 of a kind
-    if (sortedHand.match(/(\w)\1{3}/)) return 5 + numJokers;
+    if (highCount === 4) return 5;
 
     // full house
-    if (sortedHand.match(/(\w)\1(?:\1(\w)\2|(\w)\3{2})/)) return 4;
+    if (highCount === 3 && secondCount === 2) return 4;
 
-    // 3 of a kind
-    if (sortedHand.match(/(\w)\1{2}/)) {
-        if (numJokers) return 3 + numJokers + 1;
+    // 3 of a kidn
+    if (highCount === 3 && secondCount === 1) return 3;
 
-        return 3;
-    }
+    // 2 pairs
+    if (highCount === 2 && secondCount === 2) return 2;
 
-    // 2 pair
-    if (sortedHand.match(/(\w)\1.*(\w)\2/)) {
-        if (numJokers) return 4;
-
-        return 2;
-    };
-
-    // 1 pair
-    if (sortedHand.match(/(\w)\1/)) {
-        if (numJokers === 1) return 3;
-        if (numJokers === 2) return 5;
-        if (numJokers === 3) return 6;
-
-        return 1;
-    }
-
-    if (numJokers === 1) return 1;
-    if (numJokers === 2) return 3;
-    if (numJokers === 3) return 5;
-
-    return 0;
+    // 1 pair || high card
+    return highCount - 1;
 };
 
 const handSorter = ([[hand1, hand1Value]], [[hand2, hand2Value]], joker) => {
