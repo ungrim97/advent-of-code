@@ -111,10 +111,4 @@ console.log('Part 1 = %d', data.reduce((total, sequence) => total += calcNextVal
 //
 // Analyze your OASIS report again, this time extrapolating the previous value for each history. What is the sum of these extrapolated values?
 
-const calcPreviousValue = (sequence) => {
-    const diffSeq = sequence.reduce((out, value, index) => typeof sequence[index - 1 ] === 'undefined' ? out : out.concat(value - sequence[index - 1]), []);
-
-    return sequence[0] - (diffSeq.find((value) => value !== 0) ? calcPreviousValue(diffSeq) : 0);
-};
-
-console.log('Part 2 = %d', data.reduce((total, sequence) => total += calcPreviousValue(sequence), 0));
+console.log('Part 2 = %d', data.reduce((total, sequence) => total += calcNextValue(sequence.reverse()), 0));
