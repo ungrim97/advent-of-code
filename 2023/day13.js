@@ -1,29 +1,12 @@
 'use strict';
 
-// const input = [
-//     "#.##..##.",
-//     "..#.##.#.",
-//     "##......#",
-//     "##......#",
-//     "..#.##.#.",
-//     "..##..##.",
-//     "#.#.##.#.",
-//     "",
-//     "#...##..#",
-//     "#....#..#",
-//     "..##..###",
-//     "#####.##.",
-//     "#####.##.",
-//     "..##..###",
-//     "#....#..#",
-// ];
 const input = JSON.parse(require('fs').readFileSync('./day13.input.json').toString());
 
 const data = input.join(',').split(',,').map((segment) => segment.split(','));
 
 const getReflections = (rows, diffsAllowed = 0) => {
     // For each row
-    FOO: for (let i = 0; i < rows.length - 1; i++) {
+    for (let i = 0; i < rows.length - 1; i++) {
         let diffs = 0;
 
         // Find the reflection and move out
