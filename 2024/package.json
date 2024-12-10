@@ -1,0 +1,29 @@
+{
+    "name": "aoc-2024",
+    "version": "1.0.0",
+    "description": "Advent of Code - 2024",
+    "main": "index.js",
+    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ungrim97/advent-of-code.git"
+    },
+    "keywords": [
+        "aoc",
+        "advent-of-code",
+        "typescript",
+        "nodejs"
+    ],
+    "author": "Mike Eve",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ungrim97/advent-of-code/issues"
+    },
+    "homepage": "https://github.com/ungrim97/advent-of-code#readme",
+    "devDependencies": {
+        "@tsconfig/node20": "^20.1.4",
+        "@types/node": "^22.10.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.2"
+    }
+}
